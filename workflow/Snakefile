@@ -1,0 +1,104 @@
+"""
+Bulk RNA-seq: STAR alignment -> featureCounts -> DESeq2.
+Real, small (nf-core/test-datasets, GSE110004-derived) dataset; STAR and
+featureCounts run in Docker containers, DESeq2 runs in the host R install.
+"""
+
+SAMPLES = ["SRR6357070", "SRR6357071", "SRR6357072", "SRR6357076"]
+
+STAR_IMAGE = "quay.io/biocontainers/star:2.7.11b--h5ca1c30_8"
+SUBREAD_IMAGE = "quay.io/biocontainers/subread:2.0.8--h577a1d6_0"
+
+WORKDIR = os.getcwd() if (os := __import__("os")) else "."
+
+
+rule all:
+    input:
+        "results/deseq2_results.tsv",
+        "sql/rnaseq.db",
+        "spark/sample_summary.tsv",
+
+
+rule star_index:
+    input:
+        fasta="data/reference/genome.fasta",
+        gtf="data/reference/genes.gtf",
+    output:
+        directory("data/reference/star_index"),
+    shell:
+        """
+        mkdir -p {output}
+        docker run --rm -v {WORKDIR}:/data {STAR_IMAGE} \
+          STAR --runMode genomeGenerate \
+            --genomeDir /data/{output} \
+            --genomeFastaFiles /data/{input.fasta} \
+            --sjdbGTFfile /data/{input.gtf} \
+            --sjdbOverhang 49 \
+            --genomeSAindexNbases 7 \
+            --runThreadN 4
+        """
+
+
+rule star_align:
+    input:
+        index="data/reference/star_index",
+        r1="data/fastq/{sample}_1.fastq.gz",
+        r2="data/fastq/{sample}_2.fastq.gz",
+    output:
+        bam="results/star/{sample}_Aligned.sortedByCoord.out.bam",
+    shell:
+        """
+        docker run --rm -v {WORKDIR}:/data {STAR_IMAGE} \
+          STAR --runMode alignReads \
+            --genomeDir /data/{input.index} \
+            --readFilesIn /data/{input.r1} /data/{input.r2} \
+            --readFilesCommand zcat \
+            --outSAMtype BAM SortedByCoordinate \
+            --quantMode GeneCounts \
+            --outFileNamePrefix /data/results/star/{wildcards.sample}_ \
+            --runThreadN 4
+        """
+
+
+rule feature_counts:
+    input:
+        bams=expand("results/star/{sample}_Aligned.sortedByCoord.out.bam", sample=SAMPLES),
+        gtf="data/reference/genes.gtf",
+    output:
+        "results/featurecounts.txt",
+    params:
+        bams_in_container=lambda wc, input: " ".join(f"/data/{b}" for b in input.bams),
+    shell:
+        """
+        docker run --rm -v {WORKDIR}:/data {SUBREAD_IMAGE} \
+          featureCounts -a /data/{input.gtf} -o /data/{output} \
+            -T 4 -p --countReadPairs \
+            {params.bams_in_container}
+        """
+
+
+rule deseq2:
+    input:
+        "results/featurecounts.txt",
+    output:
+        "results/deseq2_results.tsv",
+    shell:
+        "Rscript scripts/run_deseq2.R {input} results"
+
+
+rule load_sqlite:
+    input:
+        "results/deseq2_results.tsv",
+    output:
+        "sql/rnaseq.db",
+    shell:
+        "python3 scripts/load_sqlite.py {input} {output}"
+
+
+rule spark_aggregate:
+    input:
+        "results/deseq2_results.tsv",
+    output:
+        "spark/sample_summary.tsv",
+    shell:
+        "python3 spark/aggregate_counts.py results/featurecounts.txt {output}"

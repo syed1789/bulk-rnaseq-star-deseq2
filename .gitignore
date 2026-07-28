@@ -1,0 +1,16 @@
+.DS_Store
+__pycache__/
+*.pyc
+.Rhistory
+.RData
+.venv/
+.snakemake/
+data/fastq/*.fastq.gz
+data/reference/star_index/
+results/star/*.bam
+results/star/*.bam.bai
+results/star/_STARtmp/
+airflow.db
+airflow-webserver.pid
+logs/
+airflow/.airflow_home/

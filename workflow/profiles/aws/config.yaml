@@ -1,0 +1,18 @@
+# S3-backed Snakemake execution, mirroring the `awsbatch` profile already in
+# my nf-variant-pipeline repo's nextflow.config. Config-only, same as that
+# one: no AWS CLI/credentials in this environment, so this has not been run
+# against a real account -- it documents the intended setup, not a verified
+# execution.
+#
+# Usage (on a machine with AWS credentials configured):
+#   snakemake -s workflow/Snakefile --workflow-profile workflow/profiles/aws \
+#     --default-storage-provider s3 --default-storage-prefix s3://my-bucket/bulk-rnaseq
+#
+# Requires: pip install snakemake-storage-plugin-s3 snakemake-executor-plugin-aws-batch
+executor: aws-batch
+jobs: 10
+default-resources:
+  aws_batch_queue: "my-batch-queue"
+  mem_mb: 4000
+default-storage-provider: s3
+default-storage-prefix: "s3://my-bucket/bulk-rnaseq-star-deseq2"

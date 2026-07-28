@@ -1,0 +1,168 @@
+STAR version=2.7.11b
+STAR compilation time,server,dir=2025-11-14T12:06:42+0000 :/opt/conda/conda-bld/star_1763121846936/work/source
+##### Command Line:
+/usr/local/bin/STAR-avx2 --runMode alignReads --genomeDir /data/data/reference/star_index --readFilesIn /data/data/fastq/SRR6357070_1.fastq.gz /data/data/fastq/SRR6357070_2.fastq.gz --readFilesCommand zcat --outSAMtype BAM SortedByCoordinate --quantMode GeneCounts --outFileNamePrefix /data/results/star/SRR6357070_ --runThreadN 4
+##### Initial USER parameters from Command Line:
+outFileNamePrefix                 /data/results/star/SRR6357070_
+###### All USER parameters from Command Line:
+runMode                       alignReads        ~RE-DEFINED
+genomeDir                     /data/data/reference/star_index     ~RE-DEFINED
+readFilesIn                   /data/data/fastq/SRR6357070_1.fastq.gz   /data/data/fastq/SRR6357070_2.fastq.gz        ~RE-DEFINED
+readFilesCommand              zcat        ~RE-DEFINED
+outSAMtype                    BAM   SortedByCoordinate        ~RE-DEFINED
+quantMode                     GeneCounts        ~RE-DEFINED
+outFileNamePrefix             /data/results/star/SRR6357070_     ~RE-DEFINED
+runThreadN                    4     ~RE-DEFINED
+##### Finished reading parameters from all sources
+
+##### Final user re-defined parameters-----------------:
+runMode                           alignReads   
+runThreadN                        4
+genomeDir                         /data/data/reference/star_index
+readFilesIn                       /data/data/fastq/SRR6357070_1.fastq.gz   /data/data/fastq/SRR6357070_2.fastq.gz   
+readFilesCommand                  zcat   
+outFileNamePrefix                 /data/results/star/SRR6357070_
+outSAMtype                        BAM   SortedByCoordinate   
+quantMode                         GeneCounts   
+
+-------------------------------
+##### Final effective command line:
+/usr/local/bin/STAR-avx2   --runMode alignReads      --runThreadN 4   --genomeDir /data/data/reference/star_index   --readFilesIn /data/data/fastq/SRR6357070_1.fastq.gz   /data/data/fastq/SRR6357070_2.fastq.gz      --readFilesCommand zcat      --outFileNamePrefix /data/results/star/SRR6357070_   --outSAMtype BAM   SortedByCoordinate      --quantMode GeneCounts   
+----------------------------------------
+
+Number of fastq files for each mate = 1
+
+   Input read files for mate 1 :
+-rw-r--r--    1 root     root       2239317 Jul 28 11:26 /data/data/fastq/SRR6357070_1.fastq.gz
+
+   readsCommandsFile:
+exec > "/data/results/star/SRR6357070__STARtmp/tmp.fifo.read1"
+echo FILE 0
+zcat      "/data/data/fastq/SRR6357070_1.fastq.gz"
+
+
+   Input read files for mate 2 :
+-rw-r--r--    1 root     root       2232117 Jul 28 11:26 /data/data/fastq/SRR6357070_2.fastq.gz
+
+   readsCommandsFile:
+exec > "/data/results/star/SRR6357070__STARtmp/tmp.fifo.read2"
+echo FILE 0
+zcat      "/data/data/fastq/SRR6357070_2.fastq.gz"
+
+ParametersSolo: --soloCellFilterType CellRanger2.2 filtering parameters:  3000 0.99 10
+WARNING: --limitBAMsortRAM=0, will use genome size as RAM limit for BAM sorting
+Finished loading and checking parameters
+Reading genome generation parameters:
+### /usr/local/bin/STAR-avx2   --runMode genomeGenerate      --runThreadN 4   --genomeDir /data/data/reference/star_index   --genomeFastaFiles /data/data/reference/genome.fasta      --genomeSAindexNbases 7   --sjdbGTFfile /data/data/reference/genes.gtf   --sjdbOverhang 49
+### GstrandBit=32
+versionGenome                 2.7.4a     ~RE-DEFINED
+genomeType                    Full     ~RE-DEFINED
+genomeFastaFiles              /data/data/reference/genome.fasta        ~RE-DEFINED
+genomeSAindexNbases           7     ~RE-DEFINED
+genomeChrBinNbits             18     ~RE-DEFINED
+genomeSAsparseD               1     ~RE-DEFINED
+genomeTransformType           None     ~RE-DEFINED
+genomeTransformVCF            -     ~RE-DEFINED
+sjdbOverhang                  49     ~RE-DEFINED
+sjdbFileChrStartEnd           -        ~RE-DEFINED
+sjdbGTFfile                   /data/data/reference/genes.gtf     ~RE-DEFINED
+sjdbGTFchrPrefix              -     ~RE-DEFINED
+sjdbGTFfeatureExon            exon     ~RE-DEFINED
+sjdbGTFtagExonParentTranscripttranscript_id     ~RE-DEFINED
+sjdbGTFtagExonParentGene      gene_id     ~RE-DEFINED
+sjdbInsertSave                Basic     ~RE-DEFINED
+genomeFileSizes               262639   1903344        ~RE-DEFINED
+Genome version is compatible with current STAR
+Number of real (reference) chromosomes= 1
+1	I	230218	0
+--sjdbOverhang = 49 taken from the generated genome
+Started loading the genome: Tue Jul 28 11:35:08 2026
+
+Genome: size given as a parameter = 262639
+SA: size given as a parameter = 1903344
+SAindex: size given as a parameter = 1
+Read from SAindex: pGe.gSAindexNbases=7  nSAi=21844
+nGenome=262639;  nSAbyte=1903344
+GstrandBit=32   SA number of indices=461416
+Shared memory is not used for genomes. Allocated a private copy of the genome.
+Genome file size: 262639 bytes; state: good=1 eof=0 fail=0 bad=0
+Loading Genome ... done! state: good=1 eof=0 fail=0 bad=0; loaded 262639 bytes
+SA file size: 1903344 bytes; state: good=1 eof=0 fail=0 bad=0
+Loading SA ... done! state: good=1 eof=0 fail=0 bad=0; loaded 1903344 bytes
+Loading SAindex ... done: 95643 bytes
+Finished loading the genome: Tue Jul 28 11:35:08 2026
+
+Processing splice junctions database sjdbN=5,   pGe.sjdbOverhang=49 
+alignIntronMax=alignMatesGapMax=0, the max intron size will be approximately determined by (2^winBinNbits)*winAnchorDistNbins=589824
+Created thread # 1
+Starting to map file # 0
+mate 1:   /data/data/fastq/SRR6357070_1.fastq.gz
+mate 2:   /data/data/fastq/SRR6357070_2.fastq.gz
+Created thread # 2
+Created thread # 3
+Thread #1 end of input stream, nextChar=-1
+Completed: thread #2
+Completed: thread #3
+Completed: thread #0
+BAM sorting: 86950 mapped reads
+BAM sorting bins genomic start loci:
+1	0	71797
+2	0	71984
+3	0	72222
+4	0	72496
+5	0	72777
+6	0	73023
+7	0	76449
+8	0	106683
+9	0	133036
+10	0	139952
+11	0	140288
+12	0	140646
+13	0	141003
+14	0	142629
+15	0	157442
+16	0	160460
+17	0	160719
+18	0	160902
+19	0	161096
+20	0	161272
+21	0	161511
+22	0	161730
+23	0	161910
+24	0	162073
+25	0	162234
+26	0	162411
+27	0	162533
+28	0	162698
+29	0	162897
+30	0	163042
+31	0	163203
+32	0	163373
+33	0	163583
+34	0	163814
+35	0	164004
+36	0	164167
+37	0	164302
+38	0	164422
+39	0	164544
+40	0	164669
+41	0	164856
+42	0	165051
+43	0	165217
+44	0	165383
+45	0	165559
+46	0	165695
+47	0	165885
+48	0	183151
+Completed: thread #1
+Joined thread # 1
+Joined thread # 2
+Joined thread # 3
+Jul 28 11:35:32 ..... finished mapping
+RAM after mapping:
+VmPeak:	 1123972 kB; VmSize:	 1058652 kB; VmHWM:	  484168 kB; VmRSS:	  463472 kB; 
+RAM after freeing genome index memory:
+VmPeak:	 1123972 kB; VmSize:	 1056532 kB; VmHWM:	  484168 kB; VmRSS:	  461356 kB; 
+Jul 28 11:35:32 ..... started sorting BAM
+Max memory needed for sorting = 512362
+ALL DONE!

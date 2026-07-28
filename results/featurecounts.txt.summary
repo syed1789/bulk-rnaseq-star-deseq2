@@ -1,0 +1,15 @@
+Status	/data/results/star/SRR6357070_Aligned.sortedByCoord.out.bam	/data/results/star/SRR6357071_Aligned.sortedByCoord.out.bam	/data/results/star/SRR6357072_Aligned.sortedByCoord.out.bam	/data/results/star/SRR6357076_Aligned.sortedByCoord.out.bam
+Assigned	33625	35264	33756	34373
+Unassigned_Unmapped	0	0	0	0
+Unassigned_Read_Type	0	0	0	0
+Unassigned_Singleton	0	0	0	0
+Unassigned_MappingQuality	0	0	0	0
+Unassigned_Chimera	0	0	0	0
+Unassigned_FragmentLength	0	0	0	0
+Unassigned_Duplicate	0	0	0	0
+Unassigned_MultiMapping	2580	2660	2506	2453
+Unassigned_Secondary	0	0	0	0
+Unassigned_NonSplit	0	0	0	0
+Unassigned_NoFeatures	2389	2417	2341	2140
+Unassigned_Overlapping_Length	0	0	0	0
+Unassigned_Ambiguity	4881	4630	5601	5977
