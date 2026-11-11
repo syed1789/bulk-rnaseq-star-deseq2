@@ -11,6 +11,24 @@ SUBREAD_IMAGE = "quay.io/biocontainers/subread:2.0.8--h577a1d6_0"
 
 WORKDIR = os.getcwd() if (os := __import__("os")) else "."
 
+# Container runtime. "docker" (default: laptop, EC2) or "apptainer" (HPC clusters,
+# where Docker is not permitted). Select with CONTAINER_RUNTIME=apptainer in the
+# environment; SLURM jobs inherit it. The `docker` command produced is unchanged.
+CONTAINER_RUNTIME = os.environ.get("CONTAINER_RUNTIME", "docker")
+
+
+def container_run(image):
+    """Shell prefix that runs a command in `image` with the work dir at /data."""
+    if CONTAINER_RUNTIME == "docker":
+        return f"docker run --rm -v {WORKDIR}:/data {image}"
+    if CONTAINER_RUNTIME == "apptainer":
+        return f"apptainer exec --bind {WORKDIR}:/data docker://{image}"
+    raise ValueError(f"CONTAINER_RUNTIME must be docker or apptainer, got {CONTAINER_RUNTIME!r}")
+
+
+STAR_RUN = container_run(STAR_IMAGE)
+SUBREAD_RUN = container_run(SUBREAD_IMAGE)
+
 
 rule all:
     input:
@@ -28,7 +46,7 @@ rule star_index:
     shell:
         """
         mkdir -p {output}
-        docker run --rm -v {WORKDIR}:/data {STAR_IMAGE} \
+        {STAR_RUN} \
           STAR --runMode genomeGenerate \
             --genomeDir /data/{output} \
             --genomeFastaFiles /data/{input.fasta} \
@@ -48,7 +66,7 @@ rule star_align:
         bam="results/star/{sample}_Aligned.sortedByCoord.out.bam",
     shell:
         """
-        docker run --rm -v {WORKDIR}:/data {STAR_IMAGE} \
+        {STAR_RUN} \
           STAR --runMode alignReads \
             --genomeDir /data/{input.index} \
             --readFilesIn /data/{input.r1} /data/{input.r2} \
@@ -70,7 +88,7 @@ rule feature_counts:
         bams_in_container=lambda wc, input: " ".join(f"/data/{b}" for b in input.bams),
     shell:
         """
-        docker run --rm -v {WORKDIR}:/data {SUBREAD_IMAGE} \
+        {SUBREAD_RUN} \
           featureCounts -a /data/{input.gtf} -o /data/{output} \
             -T 4 -p --countReadPairs \
             {params.bams_in_container}
