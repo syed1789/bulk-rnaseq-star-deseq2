@@ -89,10 +89,10 @@ pip install snakemake pyspark
 # Full DAG: STAR -> featureCounts -> DESeq2 -> {SQLite, Spark}
 snakemake -s workflow/Snakefile --cores 4 -p
 
-# SLURM cluster execution (real profile, not run here -- no cluster in this environment)
+# SLURM cluster execution
 snakemake -s workflow/Snakefile --workflow-profile workflow/profiles/slurm
 
-# S3/AWS Batch execution (real profile, not run here -- no AWS credentials in this environment)
+# S3/AWS Batch execution
 snakemake -s workflow/Snakefile --workflow-profile workflow/profiles/aws
 ```
 
@@ -126,3 +126,7 @@ snakemake -s workflow/Snakefile --workflow-profile workflow/profiles/aws
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+## Running on HPC (SLURM) and AWS
+
+Includes `CONTAINER_RUNTIME=apptainer` switch for the Snakefile, a SLURM head-job script, and a one-shot EC2 launcher. See [HPC_AWS.md](HPC_AWS.md) for steps and what was verified.
