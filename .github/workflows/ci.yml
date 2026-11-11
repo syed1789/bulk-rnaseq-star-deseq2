@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  shellcheck:
+    name: shellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint shell and sbatch scripts
+        run: shellcheck -S warning aws/launch_ec2.sh hpc/prefetch.sh hpc/submit_slurm.sbatch
+
+  snakemake:
+    name: snakemake parses (docker and apptainer runtimes)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install snakemake
+      - name: Parse the workflow with the Docker runtime
+        run: snakemake -s workflow/Snakefile --list-rules
+      - name: Parse the workflow with the Apptainer runtime
+        run: CONTAINER_RUNTIME=apptainer snakemake -s workflow/Snakefile --list-rules
+      - name: Reject an unknown runtime
+        run: |
+          if CONTAINER_RUNTIME=bogus snakemake -s workflow/Snakefile --list-rules; then
+            echo "expected failure for an unknown runtime" >&2; exit 1
+          fi
+      - name: Compile Python scripts
+        run: python -m compileall -q scripts spark
